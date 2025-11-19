@@ -2,25 +2,18 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.kapt)
+    alias(libs.plugins.devtools.ksp)
+    alias(libs.plugins.navigation.plugin)
+    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.anvipus.core"
-    compileSdk = 34
-
-    /*buildFeatures {
-        buildConfig = true
-    }*/
-    buildFeatures {
-        buildConfig = true
-        compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
-    }
+    compileSdk = Integer.parseInt(libs.versions.compile.get())
 
     defaultConfig {
-        minSdk = 21
+        minSdk = Integer.parseInt(libs.versions.minimum.get())
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -45,14 +38,33 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = "1.8"
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     dataBinding {
         enable = true
+    }
+    kotlinOptions {
+        jvmTarget = "21"
+    }
+    buildFeatures {
+        buildConfig = true
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/DEPENDENCIES.txt"
+            excludes += "/META-INF/LICENSE.txt"
+            excludes += "/META-INF/NOTICE.txt"
+            excludes += "/META-INF/NOTICE"
+            excludes += "/META-INF/LICENSE"
+            excludes += "/META-INF/DEPENDENCIES"
+            excludes += "/META-INF/license.txt"
+        }
     }
 }
 
@@ -64,6 +76,7 @@ dependencies {
     api(libs.androidx.lifecycle.livedata.ktx)
     api(libs.androidx.lifecycle.common.java8)
     kapt(libs.androidx.lifecycle.common.java8)
+    kapt(libs.lifecycle.common.java8.kapt)
     api(libs.androidx.appcompat)
     api(libs.androidx.worker)
     api(libs.androidx.paging)
@@ -74,6 +87,8 @@ dependencies {
     api(libs.navigation.fragment.ktx)
     api(libs.recycler.view)
     api(libs.viewpager)
+    api(libs.androidx.constraint)
+    api(libs.kotlinx.coroutines.android)
 
     // firebase
     api(platform(libs.firebase.bom))
@@ -83,27 +98,38 @@ dependencies {
     api(libs.firebase.perf.ktx)
     api(libs.firebase.appcheck.playintegrity)
     api(libs.firebase.appcheck.debug)
-    api(libs.firebase.appcheck.ktx)
+    api(libs.firebase.appcheck)
 
     //compose
-    api(libs.androidx.activity.compose)
+
     api(platform(libs.androidx.compose.bom))
+    api(libs.androidx.activity.compose)
     api(libs.androidx.material3)
     api(libs.androidx.ui.tooling.preview)
     api(libs.androidx.ui)
+    api(libs.androidx.compose.material)
+    api(libs.androidx.compose.material.icon)
     api(libs.androidx.ui.graphics)
-    api(libs.androidx.constraint)
+    api(libs.androidx.constraint.compose)
     api(libs.navigation.compose)
     api(libs.accompanist.flowlayout)
     api(libs.accompanist.permissions)
+    api(libs.accompanist.systemuicontroller)
+    api(libs.lottie.compose)
+    api(libs.androidx.lifecycle.viewmodel.compose)
+    api(libs.coil.compose)
+    api(libs.androidx.foundation)
+
 
     //retrofit
     api(libs.retrofit)
     api(libs.retrofit.converter.moshi)
+    api(libs.converter.gson)
 
     //moshi
     api(libs.moshi)
     api(libs.moshi.codegen)
+    kapt(libs.moshi.kotlin.codegen.kapt)
 
     // okhttp
     api(platform(libs.okhttp))
@@ -122,6 +148,8 @@ dependencies {
     api(libs.dagger)
     api(libs.dagger.android)
     api(libs.dagger.android.support)
+    api(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.kapt)
 
     //room
     api(libs.room)
@@ -134,14 +162,9 @@ dependencies {
 
     //lottie
     api(libs.lottie)
-    api(libs.lottie.compose)
 
     //shimmer
     api(libs.shimmer)
-
-    //coil
-    api(libs.coil.gif)
-    api(libs.coil.compose)
 
     //camerax
     api(libs.camera.core)
@@ -152,6 +175,10 @@ dependencies {
     //ml kit barcode scanning
     api(libs.ml.kit.barcode.scanning)
 
+    //ml kit text recognition
+    api(libs.play.services.mlkit.text.recognition)
+    api(libs.mlkit.detection)
+
     //timber
     api(libs.timber)
 
@@ -159,10 +186,22 @@ dependencies {
     api(libs.zxing)
     api(libs.journey.zxing)
 
+    //gpuimage
+    api(libs.gpuimage)
+
+    //exifinterface
+    api(libs.exifinterface)
+
+
     //play service
     api(libs.play.services.auth)
     api(libs.play.services.location)
     api(libs.play.services.auth.api.phone)
+
+    //glance
+    api(libs.androidx.glance)
+    api(libs.androidx.glance.appwidget)
+    api(libs.androidx.glance.material3)
 
     //chucker
     debugApi(libs.chucker.debug)

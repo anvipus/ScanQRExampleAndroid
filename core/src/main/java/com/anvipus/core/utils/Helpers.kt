@@ -17,10 +17,8 @@ import android.util.DisplayMetrics
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.webkit.WebView
-import com.google.firebase.ktx.Firebase
 import com.anvipus.core.BuildConfig
 import com.anvipus.core.models.months
-import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.json.JSONArray
@@ -269,10 +267,10 @@ object Helpers {
                         } else {
                             if (!isIPv4) {
                                 val delim = sAddr.indexOf('%') // drop ip6 zone suffix
-                                return if (delim < 0) sAddr.toUpperCase() else sAddr.substring(
+                                return if (delim < 0) sAddr.uppercase() else sAddr.substring(
                                     0,
                                     delim
-                                ).toUpperCase()
+                                ).uppercase()
                             }
                         }
                     }

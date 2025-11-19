@@ -4,9 +4,20 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.kapt)
     alias(libs.plugins.devtools.ksp)
     alias(libs.plugins.navigation.plugin)
+    id("kotlin-parcelize")
+    alias(libs.plugins.kotlin.compose)
 }
 
 android {
+    signingConfigs {
+        create("config") {
+            keyAlias = "anvipus"
+            keyPassword = "douven77"
+            storeFile = file("./anvipus.jks")
+            storePassword = "douven77"
+            isV2SigningEnabled = true
+        }
+    }
     namespace = "com.anvipus.explore"
     compileSdk = Integer.parseInt(libs.versions.compile.get())
 
@@ -29,6 +40,7 @@ android {
             isMinifyEnabled = false
             buildConfigField("String", "KUNCI_GARAM", KUNCI_GARAM)
             resValue("string", "app_name_config", "DEV Android Explore")
+            signingConfig = signingConfigs.getByName("config")
         }
         release {
             val KUNCI_GARAM: String by project
@@ -39,24 +51,25 @@ android {
             )
             buildConfigField("String", "KUNCI_GARAM", KUNCI_GARAM)
             resValue("string", "app_name_config", "Android Explore")
+            signingConfig = signingConfigs.getByName("config")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     dataBinding {
         enable = true
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "21"
     }
     buildFeatures {
         buildConfig = true
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.1"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
     packaging {
         resources {
@@ -77,8 +90,8 @@ dependencies {
 
     kapt(libs.dagger.compiler.kapt)
     kapt(libs.dagger.android.processor.kapt)
-    kapt(libs.moshi.kotlin.codegen.kapt)
-    kapt(libs.room.compiler.kapt)
+    ksp(libs.moshi.kotlin.codegen.kapt)
+    ksp(libs.room.compiler.kapt)
     kapt(libs.lifecycle.common.java8.kapt)
 
 
@@ -89,4 +102,9 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+tasks.register<Jar>("androidSourcesJar") {
+    archiveClassifier.set("sources")
+    from(android.sourceSets["main"].java.srcDirs)
 }
